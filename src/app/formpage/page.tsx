@@ -1,11 +1,10 @@
-// filepath: /home/naiplawan/Desktop/WorkHub/SWD-Test/src/app/formpage/page.tsx
 'use client';
 import React from 'react';
 import { Form, Input, Button, Radio, DatePicker, InputNumber, Row, Col } from 'antd';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { updateForm, resetForm } from '@/app/formpage/formslice';
+import { RootState } from '@/store';
+import { updateForm, resetForm } from '@/store/formSlice';
 import styles from './formpage.module.scss';
 
 const FormPage = () => {
