@@ -6,7 +6,7 @@ const LayoutPage = () => {
   const [positions, setPositions] = useState([0, 1, 2, 3, 4, 5]);
 
   const handleMoveShape = () => {
-    const newPositions = positions.map(pos => (pos + 1) % positions.length);
+    const newPositions = positions.map((pos) => (pos + 1) % positions.length);
     setPositions(newPositions);
   };
 
