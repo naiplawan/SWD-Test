@@ -1,8 +1,11 @@
 'use client';
 import { useState } from 'react';
 import styles from '@/app/layoutpage/layoutpage.module.scss';
+import { useTranslation } from 'react-i18next';
+import { TranslationKeys } from '@/enum/translation';
 
 const LayoutPage = () => {
+  const { t } = useTranslation();
   const [positions, setPositions] = useState([0, 1, 2, 3, 4, 5]);
 
   const handleMoveShape = () => {
@@ -26,15 +29,15 @@ const LayoutPage = () => {
       <div className={styles.buttonContainer}>
         <div className={styles.buttonWrapper}>
           <button onClick={handleMoveShape} className={styles.moveShape}>
-            &#8592; &#8594;
+            <div className={styles.arrowRight} />
           </button>
-          <div className={styles.buttonLabel}>Move Shape</div>
+          <div className={styles.buttonLabel}>{t(TranslationKeys.MoveShape)}</div>
         </div>
         <div className={styles.buttonWrapper}>
           <button onClick={handleSwapRows} className={styles.movePosition}>
-            &#8593; &#8595;
+            <div className={styles.arrowLeft} />
           </button>
-          <div className={styles.buttonLabel}>Move Position</div>
+          <div className={styles.buttonLabel}>{t(TranslationKeys.MovePosition)}</div>
         </div>
       </div>
 
