@@ -4,21 +4,21 @@ import { Form, Input, Button, Radio, DatePicker, InputNumber, Row, Col } from 'a
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { updateForm, resetForm } from '@/store/formSlice';
+import { resetForm } from '@/store/formSlice';
+import { useFormHydration } from '@/utils/useFormHydration';
+import { addSubmission } from '@/store/formSlice';
 import styles from './formpage.module.scss';
 import { useTranslation } from 'react-i18next';
 import { TranslationKeys } from '@/enum/translation';
+import { v4 as uuidv4 } from 'uuid';
+import FormTable from '@/app/components/FormTable';
 
 const FormPage = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const formData = useSelector((state: RootState) => state.form);
-
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-    dispatch(updateForm(values));
-  };
+  const isHydrated = useFormHydration();
 
   const onReset = () => {
     form.resetFields();
@@ -26,13 +26,31 @@ const FormPage = () => {
     console.log('Form reset');
   };
 
+  const onFinish = (values: any) => {
+    const submission = {
+      ...values,
+      id: uuidv4(),
+      birthday: values.birthday?.format('YYYY-MM-DD'),
+    };
+    dispatch(addSubmission(submission));
+    form.resetFields();
+  };
+
+  if (!isHydrated) {
+    return null; //
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
         <Form form={form} name="control-hooks" onFinish={onFinish} layout="vertical" initialValues={formData}>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please input your title!' }]}>
+              <Form.Item
+                name="title"
+                label={t(TranslationKeys.Title)}
+                rules={[{ required: true, message: 'Please input your title!' }]}
+              >
                 <Input />
               </Form.Item>
             </Col>
@@ -70,16 +88,14 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="nationality"
-                label= {t(TranslationKeys.Nationality)}
+                label={t(TranslationKeys.Nationality)}
                 rules={[{ required: true, message: 'Please input your nationality!' }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="citizenID"
-              label= {t(TranslationKeys.CitizenID)}
-              tooltip="Optional">
+              <Form.Item name="citizenID" label={t(TranslationKeys.CitizenID)} tooltip="Optional">
                 <Input placeholder="Optional" />
               </Form.Item>
             </Col>
@@ -101,7 +117,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="mobilePhone"
-                label= {t(TranslationKeys.MobilePhone)}
+                label={t(TranslationKeys.MobilePhone)}
                 rules={[
                   { required: true, message: 'Please input your mobile phone!' },
                   { pattern: /^\d+$/, message: 'Mobile number must be numeric!' },
@@ -115,7 +131,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="passportNo"
-                label= {t(TranslationKeys.PassportNo)}
+                label={t(TranslationKeys.PassportNo)}
                 tooltip="Optional"
                 rules={[{ pattern: /^[a-zA-Z0-9]+$/, message: 'Passport number must be alphanumeric!' }]}
               >
@@ -149,6 +165,9 @@ const FormPage = () => {
             </Col>
           </Row>
         </Form>
+      </div>
+      <div className={styles.tableWrapper}>
+        <FormTable />
       </div>
     </div>
   );
