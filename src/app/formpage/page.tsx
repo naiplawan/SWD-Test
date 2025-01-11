@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
+import { useEffect } from 'react';
 import { Form, Input, Button, Radio, DatePicker, InputNumber, Row, Col } from 'antd';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { resetForm } from '@/store/formSlice';
+import { addSubmission, editSubmission, resetForm, setSelectedSubmission } from '@/store/formSlice';
 import { useFormHydration } from '@/utils/useFormHydration';
-import { addSubmission } from '@/store/formSlice';
 import styles from './formpage.module.scss';
 import { useTranslation } from 'react-i18next';
 import { TranslationKeys } from '@/enum/translation';
@@ -19,6 +19,7 @@ const FormPage = () => {
   const dispatch = useDispatch();
   const formData = useSelector((state: RootState) => state.form);
   const isHydrated = useFormHydration();
+  const { selectedSubmission } = useSelector((state: RootState) => state.form);
 
   const onReset = () => {
     form.resetFields();
@@ -26,13 +27,28 @@ const FormPage = () => {
     console.log('Form reset');
   };
 
+  useEffect(() => {
+    if (selectedSubmission) {
+      form.setFieldsValue({
+        ...selectedSubmission,
+        birthday: moment(selectedSubmission.birthday),
+      });
+    }
+  }, [selectedSubmission, form]);
+
   const onFinish = (values: any) => {
-    const submission = {
+    const formData = {
       ...values,
-      id: uuidv4(),
+      id: selectedSubmission?.id || uuidv4(),
       birthday: values.birthday?.format('YYYY-MM-DD'),
     };
-    dispatch(addSubmission(submission));
+
+    if (selectedSubmission) {
+      dispatch(editSubmission(formData));
+      dispatch(setSelectedSubmission(null));
+    } else {
+      dispatch(addSubmission(formData));
+    }
     form.resetFields();
   };
 
