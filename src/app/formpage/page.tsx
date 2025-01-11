@@ -6,8 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { updateForm, resetForm } from '@/store/formSlice';
 import styles from './formpage.module.scss';
+import { useTranslation } from 'react-i18next';
+import { TranslationKeys } from '@/enum/translation';
 
 const FormPage = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const formData = useSelector((state: RootState) => state.form);
@@ -36,7 +39,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="firstName"
-                label="First Name"
+                label={t(TranslationKeys.FirstName)}
                 rules={[{ required: true, message: 'Please input your first name!' }]}
               >
                 <Input />
@@ -47,7 +50,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="lastName"
-                label="Last Name"
+                label={t(TranslationKeys.LastName)}
                 rules={[{ required: true, message: 'Please input your last name!' }]}
               >
                 <Input />
@@ -56,7 +59,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="birthday"
-                label="Birthday"
+                label={t(TranslationKeys.Birthday)}
                 rules={[{ required: true, message: 'Please input your birthday!' }]}
               >
                 <DatePicker disabledDate={(current) => current && current > moment().endOf('day')} />
@@ -67,14 +70,16 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="nationality"
-                label="Nationality"
+                label= {t(TranslationKeys.Nationality)}
                 rules={[{ required: true, message: 'Please input your nationality!' }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="citizenID" label="Citizen ID" tooltip="Optional">
+              <Form.Item name="citizenID"
+              label= {t(TranslationKeys.CitizenID)}
+              tooltip="Optional">
                 <Input placeholder="Optional" />
               </Form.Item>
             </Col>
@@ -83,20 +88,20 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="gender"
-                label="Gender"
-                rules={[{ required: true, message: 'Please select your gender!' }]}
+                label={t(TranslationKeys.Gender)}
+                rules={[{ required: true, message: t(TranslationKeys.ValidationRequired) }]}
               >
                 <Radio.Group>
-                  <Radio value="male">Male</Radio>
-                  <Radio value="female">Female</Radio>
-                  <Radio value="other">Other</Radio>
+                  <Radio value="male">{t(TranslationKeys.Male)}</Radio>
+                  <Radio value="female">{t(TranslationKeys.Female)}</Radio>
+                  <Radio value="other">{t(TranslationKeys.Other)}</Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="mobilePhone"
-                label="Mobile Phone"
+                label= {t(TranslationKeys.MobilePhone)}
                 rules={[
                   { required: true, message: 'Please input your mobile phone!' },
                   { pattern: /^\d+$/, message: 'Mobile number must be numeric!' },
@@ -110,7 +115,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="passportNo"
-                label="Passport No"
+                label= {t(TranslationKeys.PassportNo)}
                 tooltip="Optional"
                 rules={[{ pattern: /^[a-zA-Z0-9]+$/, message: 'Passport number must be alphanumeric!' }]}
               >
@@ -120,7 +125,7 @@ const FormPage = () => {
             <Col span={12}>
               <Form.Item
                 name="expectedSalary"
-                label="Expected Salary"
+                label={t(TranslationKeys.ExpectedSalary)}
                 rules={[{ required: true, message: 'Please input your expected salary!' }]}
               >
                 <InputNumber
@@ -135,10 +140,10 @@ const FormPage = () => {
             <Col span={24}>
               <Form.Item>
                 <Button type="primary" htmlType="submit">
-                  Submit
+                  {t(TranslationKeys.Submit)}
                 </Button>
                 <Button htmlType="button" onClick={onReset} style={{ marginLeft: '10px' }}>
-                  Reset
+                  {t(TranslationKeys.Reset)}
                 </Button>
               </Form.Item>
             </Col>
